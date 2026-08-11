@@ -855,7 +855,7 @@
 
                 // Отправляем через no-cors (без ожидания ответа)
                 fetch('https://script.google.com/macros/s/AKfycby_3ILp1Ojt7c9f3M75uvToPJyF5zeeU2JcraSRQPK5LRZDCcuTf2Q4GQvtFaPYmyXe8w/exec', {
-                    method: 'POST',
+                    method: 'doGet',
                     mode: 'no-cors',
                     body: formData
                 }).catch(() => {}); // Игнорируем любые ошибки
