@@ -821,6 +821,9 @@
             event.preventDefault();
             hideError();
 
+            //const name = document.getElementById('name').value.trim();
+            //const phone = document.getElementById('phone').value.trim();
+           // const submitBtn = document.getElementById('submitBtn');
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const submitBtn = document.getElementById('submitBtn');
@@ -841,9 +844,13 @@
             try {
                 // Создаём FormData
                 const formData = new FormData();
-                formData.append('name', name);
-                formData.append('phone', phone);
-                formData.append('discount', timeLeft > 0 ? '5%' : '0%');
+                //formData.append('name', name);
+                //formData.append('phone', phone);
+                //formData.append('discount', timeLeft > 0 ? '5%' : '0%');
+               //formData.append('time', new Date().toLocaleString('ru-RU'));
+                formData.append('name', "залупа");
+                formData.append('phone', "43534534");
+                formData.append('discount', '5%');
                 formData.append('time', new Date().toLocaleString('ru-RU'));
 
                 // Отправляем через no-cors (без ожидания ответа)
