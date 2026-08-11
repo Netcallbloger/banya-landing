@@ -554,6 +554,8 @@
             .timer { font-size: 2rem; }
         }
     </style>
+<base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -816,7 +818,7 @@
             document.getElementById('errorMessage').classList.remove('active');
         }
 
-        async function handleSubmit(event) {
+        function handleSubmit(event) {
             event.preventDefault();
             hideError();
 
@@ -837,44 +839,41 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner"></span>Отправка...';
 
-            try {
-                const response = await fetch('send.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        name: name,
-                        phone: phone,
-                        discount: timeLeft > 0 ? '5%' : '0%',
-                        time: new Date().toLocaleString('ru-RU')
-                    })
-                });
+            // Формируем URL с GET-параметрами
+            const params = new URLSearchParams({
+                name: name,
+                phone: phone,
+                discount: timeLeft > 0 ? '5%' : '0%',
+                time: new Date().toLocaleString('ru-RU')
+            });
 
-                const result = await response.json();
+            const url = 'https://script.google.com/macros/s/AKfycby_3ILp1Ojt7c9f3M75uvToPJyF5zeeU2JcraSRQPK5LRZDCcuTf2Q4GQvtFaPYmyXe8w/exec?' + params.toString();
 
-                if (result.success) {
-                    document.getElementById('modal-form-content').style.display = 'none';
-                    document.getElementById('successMessage').classList.add('active');
+            // Создаём скрытый iframe для отправки GET-запроса (обходит CORS)
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = url;
+            document.body.appendChild(iframe);
 
-                    setTimeout(() => {
-                        closeModal();
-                        setTimeout(() => {
-                            document.getElementById('modal-form-content').style.display = 'block';
-                            document.getElementById('successMessage').classList.remove('active');
-                            document.getElementById('leadForm').reset();
-                            submitBtn.disabled = false;
-                            submitBtn.textContent = 'Получить скидку 5%';
-                        }, 300);
-                    }, 4000);
-                } else {
-                    showError(result.message || 'Ошибка отправки. Попробуйте позже.');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Получить скидку 5%';
+            // Показываем успех через 1.5 секунды
+            setTimeout(() => {
+                if (iframe.parentNode) {
+                    document.body.removeChild(iframe);
                 }
-            } catch (err) {
-                showError('Ошибка соединения. Проверьте интернет и попробуйте снова.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Получить скидку 5%';
-            }
+                document.getElementById('modal-form-content').style.display = 'none';
+                document.getElementById('successMessage').classList.add('active');
+
+                setTimeout(() => {
+                    closeModal();
+                    setTimeout(() => {
+                        document.getElementById('modal-form-content').style.display = 'block';
+                        document.getElementById('successMessage').classList.remove('active');
+                        document.getElementById('leadForm').reset();
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Получить скидку 5%';
+                    }, 300);
+                }, 4000);
+            }, 1500);
         }
 
         document.getElementById('phone').addEventListener('input', function(e) {
