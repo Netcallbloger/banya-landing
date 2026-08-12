@@ -819,62 +819,62 @@
         }
 
         function handleSubmit(event) {
-    event.preventDefault();
-    hideError();
+            event.preventDefault();
+            hideError();
 
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const submitBtn = document.getElementById('submitBtn');
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const submitBtn = document.getElementById('submitBtn');
 
-    if (!name || !phone) {
-        showError('Пожалуйста, заполните все поля');
-        return;
-    }
+            if (!name || !phone) {
+                showError('Пожалуйста, заполните все поля');
+                return;
+            }
 
-    if (phone.length < 10) {
-        showError('Введите корректный номер телефона');
-        return;
-    }
+            if (phone.length < 10) {
+                showError('Введите корректный номер телефона');
+                return;
+            }
 
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner"></span>Отправка...';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>Отправка...';
 
-    // Формируем URL с GET-параметрами
-    const params = new URLSearchParams({
-        name: name,
-        phone: phone,
-        discount: timeLeft > 0 ? '5%' : '0%',
-        time: new Date().toLocaleString('ru-RU')
-    });
+            // Формируем URL с GET-параметрами
+            const params = new URLSearchParams({
+                name: name,
+                phone: phone,
+                discount: timeLeft > 0 ? '5%' : '0%',
+                time: new Date().toLocaleString('ru-RU')
+            });
 
-    const url = 'https://script.google.com/macros/s/AKfycby_3ILp1Ojt7c9f3M75uvToPJyF5zeeU2JcraSRQPK5LRZDCcuTf2Q4GQvtFaPYmyXe8w/exec?' + params.toString();
+            const url = 'https://script.google.com/macros/s/AKfycby_3ILp1Ojt7c9f3M75uvToPJyF5zeeU2JcraSRQPK5LRZDCcuTf2Q4GQvtFaPYmyXe8w/exec?' + params.toString();
 
-    // Создаём скрытый iframe для отправки GET-запроса (обходит CORS)
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = url;
-    document.body.appendChild(iframe);
+            // Создаём скрытый iframe для отправки GET-запроса (обходит CORS)
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = url;
+            document.body.appendChild(iframe);
 
-    // Показываем успех через 1.5 секунды
-    setTimeout(() => {
-        if (iframe.parentNode) {
-            document.body.removeChild(iframe);
-        }
-        document.getElementById('modal-form-content').style.display = 'none';
-        document.getElementById('successMessage').classList.add('active');
-
-        setTimeout(() => {
-            closeModal();
+            // Показываем успех через 1.5 секунды
             setTimeout(() => {
-                document.getElementById('modal-form-content').style.display = 'block';
-                document.getElementById('successMessage').classList.remove('active');
-                document.getElementById('leadForm').reset();
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Получить скидку 5%';
-            }, 300);
-        }, 4000);
-    }, 1500);
-}
+                if (iframe.parentNode) {
+                    document.body.removeChild(iframe);
+                }
+                document.getElementById('modal-form-content').style.display = 'none';
+                document.getElementById('successMessage').classList.add('active');
+
+                setTimeout(() => {
+                    closeModal();
+                    setTimeout(() => {
+                        document.getElementById('modal-form-content').style.display = 'block';
+                        document.getElementById('successMessage').classList.remove('active');
+                        document.getElementById('leadForm').reset();
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Получить скидку 5%';
+                    }, 300);
+                }, 4000);
+            }, 1500);
+        }
 
         document.getElementById('phone').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
